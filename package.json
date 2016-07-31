@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/hmhmmhm/deploy-class/issues"
   },
-  "homepage": "https://github.com/hmhmmhm/deploy-class#readme"
+  "homepage": "https://github.com/hmhmmhm/deploy-class#readme",
+  "dependencies": {
+    "stack-trace": "0.0.9"
+  }
 }

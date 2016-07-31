@@ -2,9 +2,26 @@
 
 let fs = require('fs');
 let path = require('path');
-let sources, modules = {};
+let sources = {};
+let modules = {};
 
 module.exports = class DeployClass {
+    static automatic(prefix) {
+        let sourceFolderPath = '';
+        let trace = require('stack-trace').parse(new Error());
+        let pathSplit = trace[1].fileName.split(path.sep);
+
+        if(trace[1].fileName[0] == '/') sourceFolderPath += '/';
+        for (let i = 0; i < pathSplit.length - 1; i++){
+            sourceFolderPath = path.join(sourceFolderPath, pathSplit[i]);
+            if(sourceFolderPath == 'C:.') sourceFolderPath = 'C:\\';
+        }
+        sourceFolderPath = path.join(sourceFolderPath, 'sources');
+
+        DeployClass.registerSourceFolder(prefix, sourceFolderPath);
+        DeployClass.treeLoader(sourceFolderPath, sourceFolderPath, prefix);
+        DeployClass.sourceLoader(sourceFolderPath, sourceFolderPath, prefix);
+    }
     static treeLoader(sourceFolderPath, originPath, prefix) {
         fs.readdirSync(sourceFolderPath).forEach(function(file) {
             let filePath = path.join(sourceFolderPath, file);
@@ -17,26 +34,34 @@ module.exports = class DeployClass {
                 if (eval("!" + tree))
                     eval(tree + " = {};");
                 if (stat.isDirectory())
-                    this.treeLoader(filePath, originPath, prefix);
+                    DeployClass.treeLoader(filePath, originPath, prefix);
             }
             catch (e) {}
         });
-    } 
+    }
 
     static requireFromString(tree, className, code, filePath) {
-        code = 'module.exports={load:()=>{' + code + ';' + tree + '=' + className + ';}}';
-        let paths = module.constructor._nodeModulePaths(path.dirname(filePath));
-        let moduleBuild = new module.constructor(filePath, module.parent);
+        try {
+            if (modules[filePath] != null) return eval('(' + tree + ')');
 
-        moduleBuild.filename = filePath;
-        moduleBuild.paths = [].concat(['prepend']).concat(paths).concat(['append']);
-        moduleBuild._compile(code, filePath);
+            code = 'module.exports={load:()=>{' + code + ';' + tree + '=' + className + ';}}';
+            let paths = module.constructor._nodeModulePaths(path.dirname(filePath));
+            let moduleBuild = new module.constructor(filePath, module.parent);
 
-        let moduleInstance = moduleBuild.exports;
-        if (moduleInstance == null || typeof(moduleInstance.load) != 'function') return;
+            moduleBuild.filename = filePath;
+            moduleBuild.paths = [].concat(['prepend']).concat(paths).concat(['append']);
+            moduleBuild._compile(code, filePath);
 
-        moduleInstance.load();
-        modules[filePath] = moduleInstance;
+            let moduleInstance = moduleBuild.exports;
+            if (moduleInstance == null || typeof(moduleInstance.load) != 'function') return;
+
+            moduleInstance.load();
+            modules[filePath] = moduleInstance;
+            return eval('(' + tree + ')');
+        }
+        catch (e) {
+            console.log('\r\n' + filePath + '\r\n\t' + e)
+        }
     }
 
     /**
@@ -61,11 +86,11 @@ module.exports = class DeployClass {
                     if (extensionCheck[1].toLowerCase() != 'js') return;
 
                     let targetClassName = file.replace(/\.js/gi, '');
-                    this.requireFromString(tree, targetClassName,
+                    DeployClass.requireFromString(tree, targetClassName,
                         fs.readFileSync(filePath, 'utf8'), filePath);
                 }
                 else {
-                    this.sourceLoader(filePath, originPath, prefix);
+                    DeployClass.sourceLoader(filePath, originPath, prefix);
                 }
             }
             catch (e) {}
@@ -79,7 +104,7 @@ module.exports = class DeployClass {
      * 종속성이 있는 소스가 있을때 필요한 소스를 바로 로드합니다.
      * @param {string} requireSourcePath
      */
-    static requireLoader(requireSourcePath) {
+    static require(requireSourcePath) {
         let splitPath = requireSourcePath.split(".");
         let prefix = null;
         let prefixCount = 0;
@@ -97,23 +122,22 @@ module.exports = class DeployClass {
             }
         }
 
-        if (!prefix) return false;
+        if (!prefix) return null;
 
         let requireAbsolutePath = "";
         for (let key in splitPath)
             if (key > prefixCount) requireAbsolutePath += ("/" + splitPath[key]);
-        let path = sources[prefix] + requireAbsolutePath;
+        let path = sources[prefix] + requireAbsolutePath + '.js';
 
         /**
          * @description
          * If the source is already loaded, not loaded.
          * 이미 로드된 소스일 경우 로드하지 않습니다.
          */
-        if (modules[path] != null) return;
+        if (modules[path] != null) return eval('(' + requireSourcePath + ')');
 
-        this.requireFromString(requireSourcePath, splitPath[splitPath.length - 1],
-            fs.readFileSync(path + '.js', 'utf8'), path + '.js');
-        return true;
+        return DeployClass.requireFromString(requireSourcePath, splitPath[splitPath.length - 1],
+            fs.readFileSync(path, 'utf8'), path);
     }
 
     /**
@@ -132,6 +156,17 @@ module.exports = class DeployClass {
      * @param {string} directory
      */
     static registerSourceFolder(prefix, directory) {
+        let splitPrefix = prefix.split('.');
+        if (splitPrefix[1] == null) {
+            eval(`global.${prefix} = {}`);
+        }
+        else {
+            let prefixBuild = 'global';
+            for (let key in splitPrefix) {
+                prefixBuild += `.${splitPrefix[key]}`;
+                eval(`${prefixBuild} = {}`);
+            }
+        }
         sources[prefix] = directory;
     }
-}
+};
