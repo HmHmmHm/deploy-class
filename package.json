@@ -1,0 +1,25 @@
+{
+  "name": "deploy-class",
+  "version": "1.0.0",
+  "description": "File hierarchy based global package module system in node.js",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmhmmhm/deploy-class.git"
+  },
+  "keywords": [
+    "oop"
+  ],
+  "author": "hmhmmhm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hmhmmhm/deploy-class/issues"
+  },
+  "homepage": "https://github.com/hmhmmhm/deploy-class#readme"
+}
