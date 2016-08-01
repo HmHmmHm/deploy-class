@@ -6,7 +6,15 @@ let sources = {};
 let modules = {};
 
 module.exports = class DeployClass {
-    static automatic(prefix) {
+    /**
+     * @description
+     * Automatically load the package module.
+     * @param {string} prefix
+     * @param {string} sourceFolderName
+     */
+    static automatic(prefix, sourceFolderName){
+        if(sourceFolderName == null) sourceFolderName = 'sources';
+        
         let sourceFolderPath = '';
         let trace = require('stack-trace').parse(new Error());
         let pathSplit = trace[1].fileName.split(path.sep);
@@ -16,12 +24,19 @@ module.exports = class DeployClass {
             sourceFolderPath = path.join(sourceFolderPath, pathSplit[i]);
             if (sourceFolderPath == 'C:.') sourceFolderPath = 'C:\\';
         }
-        sourceFolderPath = path.join(sourceFolderPath, 'sources');
-
+        sourceFolderPath = path.join(sourceFolderPath, sourceFolderName);
         DeployClass.registerSourceFolder(prefix, sourceFolderPath);
         DeployClass.treeLoader(sourceFolderPath, sourceFolderPath, prefix);
         DeployClass.sourceLoader(sourceFolderPath, sourceFolderPath, prefix);
     }
+    
+    /**
+     * @description
+     * Load the global variable depending on the file hierarchy.
+     * @param {string} sourceFolderPath
+     * @param {string} originPath
+     * @param {string} prefix
+     */
     static treeLoader(sourceFolderPath, originPath, prefix) {
         fs.readdirSync(sourceFolderPath).forEach(function(file) {
             let filePath = path.join(sourceFolderPath, file);
@@ -40,6 +55,15 @@ module.exports = class DeployClass {
         });
     }
 
+    /**
+     * @description
+     * Load the module in the string code.
+     * @param {string} tree
+     * @param {string} className
+     * @param {string} code
+     * @param {string} filePath
+     * @return {class}
+     */
     static requireFromString(tree, className, code, filePath) {
         try {
             if (modules[filePath] != null) return eval('(' + tree + ')');
@@ -60,7 +84,8 @@ module.exports = class DeployClass {
             return eval('(' + tree + ')');
         }
         catch (e) {
-            console.log('\r\n' + filePath + '\r\n\t' + e)
+            console.log('\r\n' + filePath + '\r\n\t' + e);
+            return null;
         }
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "deploy-class",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "File hierarchy based global package module system in node.js",
   "main": "index.js",
   "directories": {
@@ -14,7 +14,18 @@
     "url": "git+https://github.com/hmhmmhm/deploy-class.git"
   },
   "keywords": [
-    "oop", "packages", "module", "object-oriented"
+    "oop",
+    "packages",
+    "module",
+    "es6",
+    "class",
+    "object-oriented",
+    "java",
+    "package",
+    "object oriented programming",
+    "object oriented javascript",
+    "javascript",
+    "namespace"
   ],
   "author": "hmhmmhm",
   "license": "MIT",
