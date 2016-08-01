@@ -11,10 +11,10 @@ module.exports = class DeployClass {
         let trace = require('stack-trace').parse(new Error());
         let pathSplit = trace[1].fileName.split(path.sep);
 
-        if(trace[1].fileName[0] == '/') sourceFolderPath += '/';
-        for (let i = 0; i < pathSplit.length - 1; i++){
+        if (trace[1].fileName[0] == '/') sourceFolderPath += '/';
+        for (let i = 0; i < pathSplit.length - 1; i++) {
             sourceFolderPath = path.join(sourceFolderPath, pathSplit[i]);
-            if(sourceFolderPath == 'C:.') sourceFolderPath = 'C:\\';
+            if (sourceFolderPath == 'C:.') sourceFolderPath = 'C:\\';
         }
         sourceFolderPath = path.join(sourceFolderPath, 'sources');
 
@@ -67,7 +67,6 @@ module.exports = class DeployClass {
     /**
      * @description
      * Load all the source files in the specified folder.
-     * 지정된 폴더 안에 있는 모든 소스파일들을 로드해옵니다.
      * @param {string} sourceFolderPath
      */
     static sourceLoader(sourceFolderPath, originPath, prefix) {
@@ -101,7 +100,6 @@ module.exports = class DeployClass {
      * @description
      * This function is load the required source.
      * Use when there are dependencies with sources.
-     * 종속성이 있는 소스가 있을때 필요한 소스를 바로 로드합니다.
      * @param {string} requireSourcePath
      */
     static require(requireSourcePath) {
@@ -132,7 +130,6 @@ module.exports = class DeployClass {
         /**
          * @description
          * If the source is already loaded, not loaded.
-         * 이미 로드된 소스일 경우 로드하지 않습니다.
          */
         if (modules[path] != null) return eval('(' + requireSourcePath + ')');
 
@@ -146,11 +143,6 @@ module.exports = class DeployClass {
      * You can only sentence like minejs, develper_name.plugin_name
      * like also possible to attach the name of the plugin developers behind the name.
      * Must register the namespace with the source folder, you can use the function dependencies.
-     *
-     * 소스폴더를 원하는 네임스페이스와 함께 등록합니다.
-     * minejs 와 같이 단문장도 되고, develper_name.plugin_name
-     * 같이 개발자명 뒤에 플러그인이름을 붙이는 것도 가능합니다.
-     * 네임스페이스와 소스폴더를 등록해야만 종속성 함수를 사용할 수 있습니다.
      *
      * @param {string} prefix
      * @param {string} directory

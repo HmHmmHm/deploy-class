@@ -14,7 +14,7 @@
     "url": "git+https://github.com/hmhmmhm/deploy-class.git"
   },
   "keywords": [
-    "oop"
+    "oop", "packages", "module", "object-oriented"
   ],
   "author": "hmhmmhm",
   "license": "MIT",
