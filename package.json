@@ -1,6 +1,6 @@
 {
   "name": "deploy-class",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "File hierarchy based global package module system in node.js",
   "main": "index.js",
   "directories": {
