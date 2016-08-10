@@ -13,7 +13,7 @@ class Storage{
         storage[item.getName()].count += item.getCount();
         console.log(`[Store] stored ${item.getName()} [count:${storage[item.getName()].price}]`);
     }
-    
+
     static getItem(itemName, count, price){
         price = price.replace('$', '');
         if(!storage[itemName]){
@@ -34,3 +34,5 @@ class Storage{
         console.log(`[Store] Ejected ${count}-${itemName}, now have ${storage[itemName].count}-${itemName}.`);
     }
 }
+
+hmhmmhm.vmachine.storage.Storage = Storage;

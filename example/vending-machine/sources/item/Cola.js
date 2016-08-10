@@ -6,3 +6,5 @@ class Cola extends Item {
         super('cola');
     }
 }
+
+hmhmmhm.vmachine.item.Cola = Cola;

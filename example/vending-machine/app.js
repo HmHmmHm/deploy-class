@@ -7,8 +7,6 @@ let Storage = hmhmmhm.vmachine.storage.Storage;
 let Cola = hmhmmhm.vmachine.item.Cola;
 let Soda = hmhmmhm.vmachine.item.Soda;
 
-
-
 let colaBox = new Cola();
 colaBox.setPrice(5).setCount(20);
 

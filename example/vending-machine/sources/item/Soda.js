@@ -6,3 +6,5 @@ class Soda extends Item {
         super('soda');
     }
 }
+
+hmhmmhm.vmachine.item.Soda = Soda;

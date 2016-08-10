@@ -26,3 +26,5 @@ class Item {
         return this;
     }
 }
+
+hmhmmhm.vmachine.item.Item = Item;

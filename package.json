@@ -1,6 +1,6 @@
 {
   "name": "deploy-class",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "File hierarchy based global package module system in node.js",
   "main": "index.js",
   "directories": {
@@ -25,7 +25,10 @@
     "object oriented programming",
     "object oriented javascript",
     "javascript",
-    "namespace"
+    "namespace",
+    "intellisense",
+    "global variable",
+    "ternjs"
   ],
   "author": "hmhmmhm",
   "license": "MIT",
