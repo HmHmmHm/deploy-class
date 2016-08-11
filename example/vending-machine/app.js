@@ -1,5 +1,7 @@
 let deployClass = require("./../../");
 deployClass.automatic('hmhmmhm.vmachine');
+//In user case, You can simply write it.
+//require('deploy-class').automatic();
 
 /* global hmhmmhm */
 

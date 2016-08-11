@@ -31,4 +31,6 @@ Simply helps implement a modular structure based on the class.
 
 ## Example
 
+<https://github.com/HmHmmHm/deploy-class/blob/master/example/java-like/app.js>
+
 <https://github.com/HmHmmHm/deploy-class/blob/master/example/vending-machine/app.js>

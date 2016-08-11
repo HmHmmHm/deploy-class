@@ -12,9 +12,9 @@ module.exports = class DeployClass {
      * @param {string} prefix
      * @param {string} sourceFolderName
      */
-    static automatic(prefix, sourceFolderName){
-        if(sourceFolderName == null) sourceFolderName = 'sources';
-        
+    static automatic(prefix, sourceFolderName) {
+        if (sourceFolderName == null) sourceFolderName = 'sources';
+
         let sourceFolderPath = '';
         let trace = require('stack-trace').parse(new Error());
         let pathSplit = trace[1].fileName.split(path.sep);
@@ -25,11 +25,27 @@ module.exports = class DeployClass {
             if (sourceFolderPath == 'C:.') sourceFolderPath = 'C:\\';
         }
         sourceFolderPath = path.join(sourceFolderPath, sourceFolderName);
-        DeployClass.registerSourceFolder(prefix, sourceFolderPath);
-        DeployClass.treeLoader(sourceFolderPath, sourceFolderPath, prefix);
-        DeployClass.sourceLoader(sourceFolderPath, sourceFolderPath, prefix);
+
+        if (prefix !== undefined) {
+            DeployClass.registerSourceFolder(prefix, sourceFolderPath);
+            DeployClass.treeLoader(sourceFolderPath, sourceFolderPath, prefix);
+            DeployClass.sourceLoader(sourceFolderPath, sourceFolderPath, prefix);
+        } else {
+            fs.readdirSync(sourceFolderPath).forEach(function(file) {
+                let prefixFolderPath = path.join(sourceFolderPath, file);
+                let stat = fs.statSync(prefixFolderPath);
+                try {
+                    if (stat.isDirectory()) {
+                        prefix = file;
+                        DeployClass.registerSourceFolder(prefix, prefixFolderPath);
+                        DeployClass.treeLoader(prefixFolderPath, prefixFolderPath, prefix);
+                        DeployClass.sourceLoader(prefixFolderPath, prefixFolderPath, prefix);
+                    }
+                } catch (e) {}
+            });
+        }
     }
-    
+
     /**
      * @description
      * Load the global variable depending on the file hierarchy.
@@ -50,8 +66,7 @@ module.exports = class DeployClass {
                     eval(tree + " = {};");
                 if (stat.isDirectory())
                     DeployClass.treeLoader(filePath, originPath, prefix);
-            }
-            catch (e) {}
+            } catch (e) {}
         });
     }
 
@@ -82,8 +97,7 @@ module.exports = class DeployClass {
             moduleInstance.load();
             modules[filePath] = moduleInstance;
             return eval('(' + tree + ')');
-        }
-        catch (e) {
+        } catch (e) {
             console.log('\r\n' + filePath + '\r\n\t' + e);
             return null;
         }
@@ -105,19 +119,16 @@ module.exports = class DeployClass {
                     tree = tree.replace(new RegExp("/", 'g'), '.');
                     tree = tree.replace(/\\/g, '.');
 
-                    let extensionCheck = file.split('.');
-                    if (extensionCheck.length < 2) return;
-                    if (extensionCheck[1].toLowerCase() != 'js') return;
+                    let extension = path.extname(file);
+                    if (extension != '.js' && extension != '.jsx') return;
 
                     let targetClassName = file.replace(/\.js/gi, '');
                     DeployClass.requireFromString(tree, targetClassName,
                         fs.readFileSync(filePath, 'utf8'), filePath);
-                }
-                else {
+                } else {
                     DeployClass.sourceLoader(filePath, originPath, prefix);
                 }
-            }
-            catch (e) {}
+            } catch (e) {}
         });
     }
 
@@ -150,7 +161,18 @@ module.exports = class DeployClass {
         let requireAbsolutePath = "";
         for (let key in splitPath)
             if (key > prefixCount) requireAbsolutePath += ("/" + splitPath[key]);
-        let path = sources[prefix] + requireAbsolutePath + '.js';
+        let stats, path;
+        try {
+            stats = fs.statSync(sources[prefix] + requireAbsolutePath + '.js');
+            path = sources[prefix] + requireAbsolutePath + '.js';
+        } catch (err) {
+            try {
+                stats = fs.statSync(sources[prefix] + requireAbsolutePath + '.jsx');
+                path = sources[prefix] + requireAbsolutePath + '.jsx';
+            } catch (err) {
+                return;
+            }
+        }
 
         /**
          * @description
@@ -176,8 +198,7 @@ module.exports = class DeployClass {
         let splitPrefix = prefix.split('.');
         if (splitPrefix[1] == null) {
             eval(`global.${prefix} = {}`);
-        }
-        else {
+        } else {
             let prefixBuild = 'global';
             for (let key in splitPrefix) {
                 prefixBuild += `.${splitPrefix[key]}`;

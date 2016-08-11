@@ -2,16 +2,15 @@
 // It makes ternjs can understand this project.
 // just use command 'node collect', so IDE Intellisense will be work.
 
-/** @namespace hmhmmhm */
-var hmhmmhm = {
-  vmachine: {
-    item: {
-      Cola: {},
-      Item: {},
-      Soda: {}
-    },
-    storage: {
-      Storage: {}
-    }
+/** @namespace com */
+var com = {
+  like: {
+    SampleClass: {}
+  }
+};
+/** @namespace org */
+var org = {
+  like: {
+    SampleClass: {}
   }
 };
