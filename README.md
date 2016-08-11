@@ -25,6 +25,7 @@ Simply helps implement a modular structure based on the class.
 - Now deploy-class can be support tern.js intellisense!
 - Download(or copy) the `.tern-project` file in your project folder.
 - Download(or copy) the collect.js in your project folder, and edit `let prefix = "projectprefixname";` to your project prefix, and type `node collect`, So simply maded header.js in the project folder.
+- If you want to automatic collect, use the command `node collect repeat`.
 
 ![Showcase](http://i.imgur.com/gSHLx3Y.gif)
 
