@@ -16,14 +16,7 @@ module.exports = class DeployClass {
         if (sourceFolderName == null) sourceFolderName = 'sources';
 
         let sourceFolderPath = '';
-        let trace = require('stack-trace').parse(new Error());
-        let pathSplit = trace[1].fileName.split(path.sep);
-
-        if (trace[1].fileName[0] == '/') sourceFolderPath += '/';
-        for (let i = 0; i < pathSplit.length - 1; i++) {
-            sourceFolderPath = path.join(sourceFolderPath, pathSplit[i]);
-            if (sourceFolderPath == 'C:.') sourceFolderPath = 'C:\\';
-        }
+        sourceFolderPath = path.join(process.argv[1], '../');
         sourceFolderPath = path.join(sourceFolderPath, sourceFolderName);
 
         if (prefix !== undefined) {

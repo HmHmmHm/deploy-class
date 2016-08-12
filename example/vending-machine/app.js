@@ -11,7 +11,6 @@ let Soda = hmhmmhm.vmachine.item.Soda;
 
 let colaBox = new Cola();
 colaBox.setPrice(5).setCount(20);
-
 let sodaBox = new Soda();
 sodaBox.setPrice(3).setCount(20);
 

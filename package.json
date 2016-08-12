@@ -1,6 +1,6 @@
 {
   "name": "deploy-class",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "File hierarchy based global package module system in node.js",
   "main": "index.js",
   "directories": {
@@ -35,8 +35,5 @@
   "bugs": {
     "url": "https://github.com/hmhmmhm/deploy-class/issues"
   },
-  "homepage": "https://github.com/hmhmmhm/deploy-class#readme",
-  "dependencies": {
-    "stack-trace": "0.0.9"
-  }
+  "homepage": "https://github.com/hmhmmhm/deploy-class#readme"
 }
