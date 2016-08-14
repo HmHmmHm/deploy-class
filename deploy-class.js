@@ -20,10 +20,12 @@ module.exports = class DeployClass {
         sourceFolderPath = path.join(sourceFolderPath, sourceFolderName);
 
         if (prefix !== undefined) {
+            if (!fs.existsSync(sourceFolderPath)) return;
             DeployClass.registerSourceFolder(prefix, sourceFolderPath);
             DeployClass.treeLoader(sourceFolderPath, sourceFolderPath, prefix);
             DeployClass.sourceLoader(sourceFolderPath, sourceFolderPath, prefix);
         } else {
+            if (!fs.existsSync(sourceFolderPath)) return;
             fs.readdirSync(sourceFolderPath).forEach(function(file) {
                 let prefixFolderPath = path.join(sourceFolderPath, file);
                 let stat = fs.statSync(prefixFolderPath);
@@ -47,6 +49,7 @@ module.exports = class DeployClass {
      * @param {string} prefix
      */
     static treeLoader(sourceFolderPath, originPath, prefix) {
+        if (!fs.existsSync(sourceFolderPath)) return;
         fs.readdirSync(sourceFolderPath).forEach(function(file) {
             let filePath = path.join(sourceFolderPath, file);
             let stat = fs.statSync(filePath);
@@ -102,6 +105,7 @@ module.exports = class DeployClass {
      * @param {string} sourceFolderPath
      */
     static sourceLoader(sourceFolderPath, originPath, prefix) {
+        if (!fs.existsSync(sourceFolderPath)) return;
         fs.readdirSync(sourceFolderPath).forEach(function(file) {
             let filePath = path.join(sourceFolderPath, file);
             let stat = fs.statSync(filePath);

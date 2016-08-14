@@ -1,4 +1,4 @@
-let deployClass = require("./../../");
+let deployClass = require("./../../deploy-class.js");
 deployClass.automatic();
 //In user case, You can simply write it.
 //require('deploy-class').automatic();
